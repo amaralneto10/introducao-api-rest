@@ -1,6 +1,6 @@
 import express from 'express'
 const app = express()
-const port = 3000
+const port = 3001
 // Banco de dados  fake (em memória)
 const usuarios = [
     {id: 1, nome: 'Amaral', email: "amaralneto@gmail.com"},
@@ -15,8 +15,44 @@ app.get('/', (req, res) => {
 })
 
 app.post('/criarUsuario', (req, res) => {
-    const { nome, idade } = req.body
-    res.send(`Nome: ${nome} | Idade: ${idade}`)
+    const { nome, email } = req.body
+    usuarios.push({
+        id: usuarios[usuarios.length - 1].id + 1,
+        nome: nome,
+        email: email
+    })
+
+    res.send(usuarios)
+})
+
+app.put('/usuario/:id', (req, res) => {
+    const { id } = req.params
+    const { novoNome, novoEmail } = req.body
+
+    const index = usuarios.findIndex((usuario) => {
+        return usuario.id == id
+    })
+
+    usuarios[index].nome = novoNome
+    usuarios[index].email = novoEmail
+
+    res.send(usuarios)
+})
+
+app.delete("/usuario/:id", (req, res) => {
+    const { id } = req.params
+
+    const index = usuarios.findIndex((usuario) => {
+    return usuario.id == id
+})
+
+if (index === -1) {
+    res.send("Usuário não encontrado!")
+}
+
+    usuarios.splice(index, 1)
+
+    res.send(usuarios)
 })
 
 /*
