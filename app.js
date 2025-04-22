@@ -22,7 +22,7 @@ app.post('/criarUsuario', (req, res) => {
         email: email
     })
 
-    res.send(usuarios)
+    res.status(201).json(usuarios)
 })
 
 app.put('/usuario/:id', (req, res) => {
@@ -32,6 +32,10 @@ app.put('/usuario/:id', (req, res) => {
     const index = usuarios.findIndex((usuario) => {
         return usuario.id == id
     })
+
+    if (index == -1) {
+       return res.status(404).json({mensagem: "Usuário não encontrado!"})
+    }
 
     usuarios[index].nome = novoNome
     usuarios[index].email = novoEmail
@@ -47,7 +51,7 @@ app.delete("/usuario/:id", (req, res) => {
 })
 
 if (index === -1) {
-    res.send("Usuário não encontrado!")
+    return res.status(404).json({mensagem: "Usuário não encontrado!"})
 }
 
     usuarios.splice(index, 1)
@@ -62,7 +66,7 @@ usuários cadastrados no "Banco de dados"
  */
 
 app.get('/usuarios', (req, res) => {
-res.send(usuarios)
+res.status(200).json(usuarios)
 })
 
 // SERVIDOR NO AR OUVINDO REQUISIÇÕES
